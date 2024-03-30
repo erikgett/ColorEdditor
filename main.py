@@ -25,10 +25,10 @@ def download_image(image, filename='processed_image.png'):
 
 # Заголовок и описание приложения
 st.title('Приложение для обработки изображений')
-st.write('Это приложение позволяет обрабатывать изображения, загруженные из Dropbox.')
+st.write('Это приложение позволяет обрабатывать изображения, в стиле Strana.')
 
 # Загрузка изображения
-uploaded_image = st.file_uploader('Выберите изображение', type=['jpg', 'jpeg', 'png'])
+uploaded_image = st.file_uploader('Выберите изображение', type=['png'])
 if uploaded_image is not None:
     try:
         image = Image.open(uploaded_image)
