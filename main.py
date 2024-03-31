@@ -11,9 +11,9 @@ def load_image_from_dropbox(dropbox_url):
     return image
 
 # Функция для обработки изображения
-def process_image(image):
+def process_image(image, deleteAfter = 200, gradientBefore = 40):
     # Ваш код обработки изображения здесь
-    processed_image = create_gradient_image_with_transparent_background(image)  # Просто заглушка, замените эту строку на ваш реальный код обработки
+    processed_image = create_gradient_image_with_transparent_background(image,  deleteAfter=deleteAfter, gradientBefore=gradientBefore)
     return processed_image
 
 # Функция для скачивания изображения
@@ -34,8 +34,10 @@ if uploaded_image is not None:
         image = Image.open(uploaded_image).convert('RGBA')
         st.image(image, caption='Загруженное изображение', use_column_width=True)
 
+        delete_color_slider = st.slider('Выберите цвет для удаления (RGB)', 0, 255, 200)
+        gradient_color_slider = st.slider('Выберите цвет для градиента (RGB)', 0, 255, 40)
         # Обработка изображения
-        processed_image = process_image(image)
+        processed_image = process_image(image, delete_color_slider, gradient_color_slider)
         st.image(processed_image, caption='Обработанное изображение', use_column_width=True)
 
         processed_image_data, processed_image_filename = download_image(processed_image)
