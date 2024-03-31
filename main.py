@@ -31,7 +31,7 @@ st.write('Это приложение позволяет обрабатыват�
 uploaded_image = st.file_uploader('Выберите изображение', type=['png'])
 if uploaded_image is not None:
     try:
-        image = Image.open(uploaded_image)
+        image = Image.open(uploaded_image).convert('RGBA')
         st.image(image, caption='Загруженное изображение', use_column_width=True)
 
         # Обработка изображения

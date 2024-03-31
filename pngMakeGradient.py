@@ -6,32 +6,37 @@ def is_color_near_white(color, threshold=200):
 
 def create_gradient_image_with_transparent_background(image, start_color = (146, 39, 143), end_color = (237, 28, 36)):
     # Открытие изображения
-    # image = Image.open(image_path).convert("RGBA")
     width, height = image.size
+    print(width, height)
 
     # Создание нового изображения для градиента с прозрачным фоном
     gradient_image = Image.new("RGBA", (width, height))
     draw = ImageDraw.Draw(gradient_image)
 
     # Преобразование цветов из RGB в формат цветовой модели Pillow (R, G, B)
-    start_color_pillow = (start_color[0], start_color[1], start_color[2], 255)  # Прозрачность 255 (непрозрачный)
-    end_color_pillow = (end_color[0], end_color[1], end_color[2], 255)  # Прозрачность 255 (непрозрачный)
+    start_color_pillow = (start_color[0], start_color[1], start_color[2], 255)  # Прозрачность
+    end_color_pillow = (end_color[0], end_color[1], end_color[2], 255)  # Прозрачность
 
     # Создание градиента
     for y in range(height):
         for x in range(width):
-            # Получение цвета текущего пикселя
             pixel_color = image.getpixel((x, y))
+            if isinstance(pixel_color, (int, float)):
+                pixel_color = (0, 0, 0, 0)
+            try:
 
-            # Если цвет текущего пикселя черный, устанавливаем альфа-канал в 0 (прозрачность)
-            if pixel_color[3] < 50:  # цветное ли это
-                draw.point((x, y), fill=(0, 0, 0, 0))  # Прозрачность 0 (прозрачный)
-            else:
-                # Если цвет не черный, заполняем его градиентом
-                r = int(start_color_pillow[0] + (end_color_pillow[0] - start_color_pillow[0]) * y / height)
-                g = int(start_color_pillow[1] + (end_color_pillow[1] - start_color_pillow[1]) * y / height)
-                b = int(start_color_pillow[2] + (end_color_pillow[2] - start_color_pillow[2]) * y / height)
-                draw.point((x, y), fill=(r, g, b, 255))  # Прозрачность 255 (непрозрачный)
+                # Если цвет текущего пикселя черный, устанавливаем альфа-канал в 0 (прозрачность)
+                if pixel_color[0] < 40 and pixel_color[1] < 40 and pixel_color[2] < 40:  # черный заполняем градиентом.
+                    r = int(start_color_pillow[0] + (end_color_pillow[0] - start_color_pillow[0]) * y / height)
+                    g = int(start_color_pillow[1] + (end_color_pillow[1] - start_color_pillow[1]) * y / height)
+                    b = int(start_color_pillow[2] + (end_color_pillow[2] - start_color_pillow[2]) * y / height)
+                    draw.point((x, y), fill=(r, g, b, pixel_color[3]))  # Прозрачность 255 (непрозрачный)
+                elif pixel_color[0] > 200 and pixel_color[1] > 200 and pixel_color[2] > 200: # белые пиксели
+                    draw.point((x, y), fill=(0, 0, 0, 0))  # Прозрачность 0 (прозрачный)
+                else: # цветные оставляем
+                    draw.point((x, y), fill=(pixel_color[0], pixel_color[1], pixel_color[2], pixel_color[3]))  # Прозрачность 0 (прозрачный)
+            except:
+                    draw.point((x, y), fill=(pixel_color[0], pixel_color[1], pixel_color[2], pixel_color[3]))
 
     return gradient_image
 
